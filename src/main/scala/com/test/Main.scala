@@ -47,12 +47,16 @@ object Main {
     val clicks = clickBucket.validClicks
     val invalidClicks = clickBucket.invalidClicks
     // the invalid clicks and impressions will be logged in this program,
-    // but one can write them to the json if need be.
-    logger.error(s"unusable records from click: $invalidClicks")
+    // but one can write them to the file if need be.
+    if (invalidClicks.nonEmpty) {
+      logger.error(s"unusable records from click: $invalidClicks")
+    }
     val impressionBucket = Impression.readImpressionsJson(impressionsPath)
     val impressions = impressionBucket.validImpression
     val invalidImpressions = impressionBucket.invalidImpression
-    logger.error(s"unusable records from impression: $invalidImpressions")
+    if (invalidImpressions.nonEmpty) {
+      logger.error(s"unusable records from impression: $invalidImpressions")
+    }
     val joinedImpressionsClicks = joinImpressionsToClicks(clicks, impressions)
     val metricsAggRes = aggregateImpressionsClicksRevenue(joinedImpressionsClicks)
     val recommendationsAggRes = aggregateImpressionsClicksTopAdvertisers(joinedImpressionsClicks)
